@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-import psycopg2  # Ganti import dari mysql.connector menjadi psycopg2
+import psycopg2
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SECRET_KEY'] = 'picolopicolo'
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -23,7 +23,7 @@ users = [
 
 # Konfigurasi database
 conn = psycopg2.connect(
-    host="localhost",  # Ganti host, port, user, password, dan database sesuai dengan konfigurasi PostgreSQL Anda
+    host="localhost",
     port="5432",
     user="your_postgresql_user",
     password="your_postgresql_password",
