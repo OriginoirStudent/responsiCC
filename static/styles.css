@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff; /* Warna latar belakang */
+    color: #6b5b95; /* Warna teks utama */
+}
+
+h1, h2, h3 {
+    color: #d64161; /* Warna judul utama */
+}
+
+a {
+    color: #ff7b25; /* Warna tautan */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+/* Warna latar belakang untuk tombol */
+button {
+    background-color: #feb236;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff7b25; /* Warna latar belakang tombol saat dihover */
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* Input styling */
+input, select {
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+/* Login form styling */
+#login-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Navbar styling */
+nav {
+    background-color: #6b5b95; /* Warna latar belakang navbar */
+    padding: 10px;
+}
+
+/* Tabel styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #6b5b95;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Tabel hover effect */
+tr:hover {
+    background-color: #feb236;
+    cursor: pointer;
+}
+
+.flash-message {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.flash-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.flash-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Menu Karyawan - Cafe Menu{% endblock %}
+
+{% block content %}
+    <h1>Menu Karyawan</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+    <ul>
+        {% for item in menu %}
+            <li>
+                {{ item[1] }} - Rp {{ item[2] }}
+                <a href="{{ url_for('edit_menu', menu_id=item[0]) }}">Edit</a>
+                <form action="{{ url_for('delete_menu', menu_id=item[0]) }}" method="post" style="display: inline;">
+                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus menu ini?')">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('karyawan_menu') }}" method="post">
+        <label for="nama">Nama Menu:</label>
+        <input type="text" name="nama" required>
+        <label for="harga">Harga:</label>
+        <input type="number" name="harga" required>
+        <button type="submit">Tambah Menu</button>
+    </form>
+{% endblock %}

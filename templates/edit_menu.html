@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Menu - Cafe Menu{% endblock %}
+
+{% block content %}
+    <h1>Edit Menu</h1>
+    <form action="{{ url_for('edit_menu', menu_id=menu[0]) }}" method="post">
+        <label for="nama">Nama Menu:</label>
+        <input type="text" name="nama" value="{{ menu.nama }}" required>
+        <label for="harga">Harga:</label>
+        <input type="number" name="harga" value="{{ menu.harga }}" required>
+        <button type="submit">Simpan Perubahan</button>
+    </form>
+{% endblock %}

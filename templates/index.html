@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Cafe Menu{% endblock %}
+
+{% block content %}
+    <h1>Selamat Datang di Cafe</h1>
+    <a href="{{ url_for('pelanggan', nomor_meja=1) }}">Pesan Sekarang</a>
+{% endblock %}

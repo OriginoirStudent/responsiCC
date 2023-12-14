@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Menu - Cafe Menu{% endblock %}
+
+{% block content %}
+    <h1>Pesan Menu</h1>
+    <form action="{{ url_for('pesan') }}" method="post">
+        <label for="menu">Pilih Menu:</label>
+        <select name="menu_id">
+            {% for item in menu %}
+                <option value="{{ item[0] }}">{{ item[1] }} - Rp {{ item[2] }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="nomor_meja" value="{{ nomor_meja }}">
+        <button type="submit">Pesan</button>
+    </form>
+{% endblock %}
