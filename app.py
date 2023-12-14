@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-import pyodbc
+import psycopg2  # Ganti import dari mysql.connector menjadi psycopg2
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'picolopicolo'
+app.config['SECRET_KEY'] = 'your_secret_key'
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -21,27 +21,21 @@ users = [
     # Tambahkan karyawan lain jika diperlukan
 ]
 
-# Konfigurasi koneksi ke Azure SQL Database
-server = 'serverdbresponsi.database.windows.net'
-database = 'dbresponsi'
-username = 'picolopicolo'
-password = '#picolo123'
-driver = '{ODBC Driver 18 for SQL Server}'  # Ganti dengan driver yang sesuai
-
-# Buat string koneksi
-connection_string = f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password};'
-
-# Buat objek koneksi
-conn = pyodbc.connect(connection_string)
-
-# Buat objek cursor
+# Konfigurasi database
+conn = psycopg2.connect(
+    host="localhost",  # Ganti host, port, user, password, dan database sesuai dengan konfigurasi PostgreSQL Anda
+    port="5432",
+    user="your_postgresql_user",
+    password="your_postgresql_password",
+    database="cafe_menu"
+)
 cursor = conn.cursor()
 
 # Tabel menu
-cursor.execute("CREATE TABLE IF NOT EXISTS menu (id INT IDENTITY(1,1) PRIMARY KEY, nama VARCHAR(255), harga INT)")
+cursor.execute("CREATE TABLE IF NOT EXISTS menu (id SERIAL PRIMARY KEY, nama VARCHAR(255), harga INT)")
 
 # Tabel pesanan
-cursor.execute("CREATE TABLE IF NOT EXISTS pesanan (id INT IDENTITY(1,1) PRIMARY KEY, nomor_meja INT, menu_id INT, FOREIGN KEY (menu_id) REFERENCES menu(id))")
+cursor.execute("CREATE TABLE IF NOT EXISTS pesanan (id SERIAL PRIMARY KEY, nomor_meja INT, menu_id INT, FOREIGN KEY (menu_id) REFERENCES menu(id))")
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -77,7 +71,7 @@ def tambah_menu():
     if request.method == 'POST':
         nama = request.form['nama']
         harga = request.form['harga']
-        cursor.execute("INSERT INTO menu (nama, harga) VALUES (?, ?)", (nama, harga))
+        cursor.execute("INSERT INTO menu (nama, harga) VALUES (%s, %s)", (nama, harga))
         conn.commit()
     return redirect(url_for('karyawan_menu'))
 
@@ -92,7 +86,7 @@ def pesan():
     if request.method == 'POST':
         nomor_meja = request.form['nomor_meja']
         menu_id = request.form['menu_id']
-        cursor.execute("INSERT INTO pesanan (nomor_meja, menu_id) VALUES (?, ?)", (nomor_meja, menu_id))
+        cursor.execute("INSERT INTO pesanan (nomor_meja, menu_id) VALUES (%s, %s)", (nomor_meja, menu_id))
         conn.commit()
     return redirect(url_for('pelanggan', nomor_meja=nomor_meja))
 
@@ -102,7 +96,7 @@ def karyawan_menu():
     if request.method == 'POST':
         nama = request.form['nama']
         harga = request.form['harga']
-        cursor.execute("INSERT INTO menu (nama, harga) VALUES (?, ?)", (nama, harga))
+        cursor.execute("INSERT INTO menu (nama, harga) VALUES (%s, %s)", (nama, harga))
         conn.commit()
         flash('Menu berhasil ditambahkan.', 'success')
     cursor.execute("SELECT * FROM menu")
@@ -115,11 +109,11 @@ def edit_menu(menu_id):
     if request.method == 'POST':
         nama = request.form['nama']
         harga = request.form['harga']
-        cursor.execute("UPDATE menu SET nama = ?, harga = ? WHERE id = ?", (nama, harga, menu_id))
+        cursor.execute("UPDATE menu SET nama = %s, harga = %s WHERE id = %s", (nama, harga, menu_id))
         conn.commit()
         flash('Menu berhasil diubah.', 'success')
         return redirect(url_for('karyawan_menu'))
-    cursor.execute("SELECT * FROM menu WHERE id = ?", (menu_id,))
+    cursor.execute("SELECT * FROM menu WHERE id = %s", (menu_id,))
     menu = cursor.fetchone()
     if menu is None:
         flash('Menu tidak ditemukan.', 'danger')
@@ -129,7 +123,7 @@ def edit_menu(menu_id):
 @app.route('/karyawan/menu/delete/<int:menu_id>', methods=['POST'])
 @login_required
 def delete_menu(menu_id):
-    cursor.execute("DELETE FROM menu WHERE id = ?", (menu_id,))
+    cursor.execute("DELETE FROM menu WHERE id = %s", (menu_id,))
     conn.commit()
     flash('Menu berhasil dihapus.', 'success')
     return redirect(url_for('karyawan_menu'))
